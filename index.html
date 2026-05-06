@@ -1,34 +1,19 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vijes AR - Mural Serpiente</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-  </head>
-  <body>
-    <a-scene mindar-image="imageTargetSrc: targets.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-      
-      <a-assets>
-        <video id="vid" src="serpiente.mp4" webkit-playsinline playsinline loop="true" crossorigin="anonymous" muted></video>
-      </a-assets>
-
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-
-      <a-entity mindar-image-target="targetIndex: 0">
-        <a-video src="#vid" width="1.5" height="1" position="-1 0 0"
-                 animation="property: position; to: 1 0 0; dur: 10000; easing: linear; loop: true">
-        </a-video>
-      </a-entity>
-      
+</head>
+<body>
+    <a-scene mindar-image="imageTargetSrc: targets.mind; uiScanning: no;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+        <a-assets>
+            <video id="vid" src="serpiente.mp4" playsinline loop="true" crossorigin="anonymous" muted></video>
+        </a-assets>
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+        <a-entity mindar-image-target="targetIndex: 0">
+            <a-video src="#vid" width="1" height="0.6" position="0 0 0"></a-video>
+        </a-entity>
     </a-scene>
-
-    <script>
-      // Activa el video cuando detecta el mural
-      const sceneEl = document.querySelector('a-scene');
-      const video = document.querySelector('#vid');
-      sceneEl.addEventListener("targetFound", () => { video.play(); });
-      sceneEl.addEventListener("targetLost", () => { video.pause(); });
-    </script>
-  </body>
+</body>
 </html>
