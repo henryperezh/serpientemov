@@ -5,15 +5,26 @@
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 </head>
-<body>
-    <a-scene mindar-image="imageTargetSrc: targets.mind; uiScanning: no;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+<body style="margin: 0; overflow: hidden;">
+    <a-scene mindar-image="imageTargetSrc: targets.mind; uiLoading: yes; uiScanning: yes;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+        
         <a-assets>
             <video id="vid" src="serpiente.mp4" playsinline loop="true" crossorigin="anonymous" muted></video>
         </a-assets>
+
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
         <a-entity mindar-image-target="targetIndex: 0">
-            <a-video src="#vid" width="1" height="0.6" position="0 0 0"></a-video>
+            <a-video src="#vid" width="1.5" height="1" position="0 0 0"></a-video>
         </a-entity>
     </a-scene>
+
+    <script>
+        // Este script fuerza la cámara y el video
+        window.addEventListener('click', () => {
+            const video = document.querySelector('#vid');
+            video.play();
+        });
+    </script>
 </body>
 </html>
