@@ -2,46 +2,31 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <script src="./aframe.min.js"></script>
-<script src="./mindar-image-aframe.prod.js"></script>
-    <style>
-        #startBtn {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 9999; padding: 25px; background: #00FF00; color: black;
-            font-weight: bold; border: 5px solid white; border-radius: 15px; font-size: 20px;
-            cursor: pointer;
-        }
-    </style>
+    <script src="./aframe.min.js"></script>
+    <script src="./mindar-image-aframe.prod.js"></script>
 </head>
 <body style="margin: 0; background: #000;">
-    <button id="startBtn">INICIAR CÁMARA</button>
-
-    <a-scene id="escena"
-        mindar-image="imageTargetSrc: ./targets.mind; autoStart: false;"
-        vr-mode-ui="enabled: false"
-        device-orientation-permission-ui="enabled: false">
+    <button id="startBtn" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; padding: 15px 30px; background: #00FF00; font-weight: bold; border-radius: 50px; border: none; cursor: pointer;">
+        INICIAR REALIDAD AUMENTADA
+    </button>
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: false; uiScanning: yes;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
         <a-assets>
             <video id="vid" src="./serpiente.mp4" playsinline loop crossorigin="anonymous" muted></video>
         </a-assets>
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-       <a-entity mindar-image-target="targetIndex: 0">
-    <a-video src="#vid" width="3.5" height="2" position="-3 0 0.2"
-             animation="property: position; from: -3 0 0.2; to: 3 0 0.2; dur: 15000; easing: linear; loop: true">
-    </a-video>
-</a-entity>
+        <a-entity mindar-image-target="targetIndex: 0">
+            <a-video src="#vid" width="2.5" height="1.5" position="0 0 0.1"></a-video>
+        </a-entity>
     </a-scene>
-
     <script>
-        const btn = document.getElementById('startBtn');
-        const sceneEl = document.getElementById('escena');
-        const video = document.getElementById('vid');
-
+        const btn = document.querySelector('#startBtn');
+        const sceneEl = document.querySelector('a-scene');
+        const video = document.querySelector('#vid');
         btn.addEventListener('click', () => {
-            video.play().catch(e => console.warn('video:', e));
             sceneEl.systems['mindar-image-system'].start();
+            video.play();
             btn.style.display = 'none';
         });
-
         sceneEl.addEventListener('targetFound', () => { video.play(); });
         sceneEl.addEventListener('targetLost', () => { video.pause(); });
     </script>
