@@ -4,27 +4,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <style>
+      #example-scanning-overlay {
+        display: flex; align-items: center; justify-content: center;
+        position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+        background: transparent; z-index: 2;
+      }
+      .inner { position: relative; width: 60vw; height: 60vw; border: 3px dashed white; }
+    </style>
 </head>
-<body style="margin: 0; overflow: hidden;">
-    <a-scene mindar-image="imageTargetSrc: targets.mind; uiLoading: yes; uiScanning: yes;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-        
-        <a-assets>
-            <video id="vid" src="serpiente.mp4" playsinline loop="true" crossorigin="anonymous" muted></video>
-        </a-assets>
+<body>
+    <div id="example-scanning-overlay"><div class="inner"></div></div>
 
-        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiError: no; uiScanning: #example-scanning-overlay;" embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-assets>
+        <video id="vid" src="serpiente.mp4" playsinline loop="true" crossorigin="anonymous" muted></video>
+      </a-assets>
 
-        <a-entity mindar-image-target="targetIndex: 0">
-            <a-video src="#vid" width="1.5" height="1" position="0 0 0"></a-video>
-        </a-entity>
+      <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: 10000; objects: .clickable"></a-camera>
+
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-video src="#vid" width="2" height="1.2" position="0 0 0" 
+                 animation="property: position; to: 1 0 0; dur: 8000; easing: linear; loop: true">
+        </a-video>
+      </a-entity>
     </a-scene>
 
     <script>
-        // Este script fuerza la cámara y el video
-        window.addEventListener('click', () => {
-            const video = document.querySelector('#vid');
-            video.play();
-        });
+      const sceneEl = document.querySelector('a-scene');
+      const video = document.querySelector('#vid');
+      sceneEl.addEventListener("targetFound", () => { video.play(); });
+      sceneEl.addEventListener("targetLost", () => { video.pause(); });
     </script>
 </body>
 </html>
