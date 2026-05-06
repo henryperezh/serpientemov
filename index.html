@@ -11,13 +11,10 @@
             font-weight: bold; border: 5px solid white; border-radius: 15px; font-size: 20px;
             cursor: pointer;
         }
-        #startBtn:disabled {
-            background: #888; color: #ccc;
-        }
     </style>
 </head>
 <body style="margin: 0; background: #000;">
-    <button id="startBtn" disabled>Cargando...</button>
+    <button id="startBtn">INICIAR CÁMARA</button>
 
     <a-scene id="escena"
         mindar-image="imageTargetSrc: ./targets.mind; autoStart: false;"
@@ -37,25 +34,14 @@
         const sceneEl = document.getElementById('escena');
         const video = document.getElementById('vid');
 
-        // Esperar que la escena esté completamente lista
-        sceneEl.addEventListener('loaded', () => {
-            btn.textContent = 'INICIAR CÁMARA';
-            btn.disabled = false;
-        });
-
         btn.addEventListener('click', () => {
-            video.play().catch(e => console.warn('video play error:', e));
+            video.play().catch(e => console.warn('video:', e));
             sceneEl.systems['mindar-image-system'].start();
             btn.style.display = 'none';
         });
 
-        sceneEl.addEventListener('targetFound', () => {
-            video.play();
-        });
-
-        sceneEl.addEventListener('targetLost', () => {
-            video.pause();
-        });
+        sceneEl.addEventListener('targetFound', () => { video.play(); });
+        sceneEl.addEventListener('targetLost', () => { video.pause(); });
     </script>
 </body>
 </html>
