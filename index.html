@@ -5,32 +5,36 @@
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 </head>
-<body style="margin: 0; background-color: #111; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+<body style="margin: 0; overflow: hidden; background: #000;">
 
-    <button id="startBtn" style="z-index: 9999; padding: 30px; font-size: 24px; background: #00FF00; color: black; border: 5px solid white; border-radius: 20px; font-weight: bold; cursor: pointer;">
-        PRESIONAR PARA VER SERPIENTE
+    <button id="startBtn" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; padding: 20px; background: #00FF00; font-weight: bold; border-radius: 10px;">
+        INICIAR EXPERIENCIA
     </button>
 
-    <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: false; uiScanning: yes;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene id="escena" mindar-image="imageTargetSrc: targets.mind; autoStart: false; uiScanning: yes;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
         <a-assets>
-            <video id="vid" src="serpiente.mp4" playsinline loop="true" crossorigin="anonymous" muted></video>
+            <video id="vid" src="serpiente.mp4" playsinline loop crossorigin="anonymous" muted></video>
         </a-assets>
+
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
         <a-entity mindar-image-target="targetIndex: 0">
-            <a-video src="#vid" width="2.5" height="1.5" position="0 0 0.3"></a-video>
+            <a-video src="#vid" width="2" height="1.2" position="0 0 0.1"></a-video>
         </a-entity>
     </a-scene>
 
     <script>
-        const btn = document.getElementById('startBtn');
+        const startBtn = document.querySelector('#startBtn');
         const sceneEl = document.querySelector('a-scene');
         const video = document.querySelector('#vid');
 
-        btn.addEventListener('click', () => {
-            console.log("Iniciando...");
-            sceneEl.systems["mindar-image-system"].start(); 
+        startBtn.addEventListener('click', () => {
+            // Esto arranca el motor de la cámara
+            sceneEl.systems["mindar-image-system"].start();
+            // Esto prepara el video
             video.play();
-            btn.style.display = 'none'; 
+            // Borra el botón
+            startBtn.style.display = "none";
         });
     </script>
 </body>
