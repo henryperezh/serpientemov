@@ -2,8 +2,10 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://aframe.io"></script>
+    <!-- Usamos tus archivos locales que se ven en la izquierda -->
+    <script src="./aframe.min.js"></script>
     <script src="./mindar-image-aframe.prod.js"></script>
+    <!-- Este es el único externo, asegúrate de copiarlo TODO -->
     <script src="https://unpkg.com"></script>
 </head>
 <body style="margin: 0; background: #000; overflow: hidden;">
@@ -13,7 +15,7 @@
 
     <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: false; uiScanning: yes;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
         <a-assets>
-            <video id="vid" src="serpiente.mp4" playsinline loop crossorigin="anonymous" muted></video>
+            <video id="vid" src="./serpiente.mp4" playsinline loop crossorigin="anonymous" muted></video>
         </a-assets>
 
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -29,9 +31,14 @@
         const video = document.querySelector('#vid');
 
         btn.addEventListener('click', () => {
-            sceneEl.systems["mindar-image-system"].start();
-            video.play();
-            btn.style.display = 'none';
+            // Verificamos que MindAR esté listo antes de iniciar
+            if (sceneEl.systems["mindar-image-system"]) {
+                sceneEl.systems["mindar-image-system"].start();
+                video.play();
+                btn.style.display = 'none';
+            } else {
+                alert("Esperando a que cargue el sistema...");
+            }
         });
     </script>
 </body>
