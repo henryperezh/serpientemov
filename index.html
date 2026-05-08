@@ -4,21 +4,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://aframe.io"></script>
     <script src="https://jsdelivr.net"></script>
-    <!-- Esta es la librería que "borra" el negro. He cambiado el enlace por uno más estable -->
-    <script src="https://jsdelivr.net"></script>
+    <script src="https://unpkg.com"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
-    <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: true;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <!-- El sistema arranca la cámara de inmediato -->
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
         <a-assets>
-            <video id="vid" src="./serpiente.mp4" playsinline loop crossorigin="anonymous" muted autoplay></video>
+            <video id="vid" src="./serpiente.mp4" playsinline loop crossorigin="anonymous" muted></video>
         </a-assets>
 
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
         
-            <!-- El truco está aquí: el shader chromakey borrará todo lo que sea negro puro -->
-            <a-video src="#vid" width="2.5" height="1.5" position="0 0 0.1" material="shader: chromakey; color: 0 0 0"></a-video>
+            <a-video src="#vid" width="2.5" height="1.5" position="0 0 0.1" material="shader: chromakey; color: 0.1 0.1 0.1"></a-video>
         
     </a-scene>
+
+    <script>
+        // Este script obliga al video a empezar en cuanto la cámara detecte el marcador
+        const video = document.querySelector('#vid');
+        const sceneEl = document.querySelector('a-scene');
+        
+        sceneEl.addEventListener("targetFound", event => {
+            video.play();
+        });
+
+        // Toque preventivo para navegadores móviles
+        window.addEventListener('click', () => {
+            video.play();
+        });
+    </script>
 </body>
 </html>
