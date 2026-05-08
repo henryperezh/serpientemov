@@ -5,9 +5,9 @@
     <script src="https://aframe.io"></script>
     <script src="https://jsdelivr.net"></script>
 </head>
-<body style="margin: 0; overflow: hidden;">
-    <button id="startBtn" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; padding: 15px 30px; cursor: pointer;">
-        INICIAR REALIDAD AUMENTADA
+<body style="margin: 0; background: #000; overflow: hidden;">
+    <button id="startBtn" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; padding: 15px 30px; background-color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+        INICIAR EXPERIENCIA
     </button>
 
     <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: false; uiScanning: yes;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
@@ -28,6 +28,7 @@
         const video = document.querySelector('#vid');
 
         btn.addEventListener('click', () => {
+            // Esto desbloquea el video y la cámara en móviles
             if (sceneEl.systems["mindar-image-system"]) {
                 sceneEl.systems["mindar-image-system"].start();
                 video.play();
