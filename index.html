@@ -2,14 +2,11 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Usamos tus archivos locales que se ven en la izquierda -->
     <script src="./aframe.min.js"></script>
     <script src="./mindar-image-aframe.prod.js"></script>
-    <!-- Este es el único externo, asegúrate de copiarlo TODO -->
-    <script src="https://unpkg.com"></script>
 </head>
 <body style="margin: 0; background: #000; overflow: hidden;">
-    <button id="startBtn" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; padding: 15px 30px; cursor: pointer;">
+    <button id="startBtn" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; padding: 15px 30px;">
         INICIAR REALIDAD AUMENTADA
     </button>
 
@@ -21,7 +18,7 @@
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
         
-            <a-video src="#vid" width="2.5" height="1.5" position="0 0 0.1" material="shader: chromakey; color: 0 0 0"></a-video>
+            <a-video src="#vid" width="2.5" height="1.5" position="0 0 0.1"></a-video>
         
     </a-scene>
 
@@ -31,13 +28,10 @@
         const video = document.querySelector('#vid');
 
         btn.addEventListener('click', () => {
-            // Verificamos que MindAR esté listo antes de iniciar
             if (sceneEl.systems["mindar-image-system"]) {
                 sceneEl.systems["mindar-image-system"].start();
                 video.play();
                 btn.style.display = 'none';
-            } else {
-                alert("Esperando a que cargue el sistema...");
             }
         });
     </script>
