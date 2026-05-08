@@ -4,7 +4,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://aframe.io"></script>
     <script src="https://jsdelivr.net"></script>
-    <script src="https://unpkg.com"></script>
+    <!-- Esta es la librería que "borra" el negro. He cambiado el enlace por uno más estable -->
+    <script src="https://jsdelivr.net"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
     <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: true;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
@@ -15,6 +16,7 @@
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
         
+            <!-- El truco está aquí: el shader chromakey borrará todo lo que sea negro puro -->
             <a-video src="#vid" width="2.5" height="1.5" position="0 0 0.1" material="shader: chromakey; color: 0 0 0"></a-video>
         
     </a-scene>
