@@ -2,27 +2,32 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="./aframe.min.js"></script>
+    <script src="https://aframe.io"></script>
     <script src="./mindar-image-aframe.prod.js"></script>
     <script src="https://unpkg.com"></script>
 </head>
-<body style="margin: 0; background: #000;">
-    <button id="startBtn" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; padding: 15px 30px;">
+<body style="margin: 0; background: #000; overflow: hidden;">
+    <button id="startBtn" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; padding: 15px 30px; cursor: pointer;">
         INICIAR REALIDAD AUMENTADA
     </button>
+
     <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: false; uiScanning: yes;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
         <a-assets>
-            <video id="vid" src="./serpiente.mp4" playsinline loop crossorigin="anonymous" muted></video>
+            <video id="vid" src="serpiente.mp4" playsinline loop crossorigin="anonymous" muted></video>
         </a-assets>
+
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
         
             <a-video src="#vid" width="2.5" height="1.5" position="0 0 0.1" material="shader: chromakey; color: 0 0 0"></a-video>
         
     </a-scene>
+
     <script>
         const btn = document.querySelector('#startBtn');
         const sceneEl = document.querySelector('a-scene');
         const video = document.querySelector('#vid');
+
         btn.addEventListener('click', () => {
             sceneEl.systems["mindar-image-system"].start();
             video.play();
