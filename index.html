@@ -8,15 +8,13 @@
     AFRAME.registerComponent('chromakey-video', {
       schema: {
         src: { type: 'selector' },
-        color: { type: 'color', default: '#175a2b' },
-        similarity: { default: 0.45 },
-        smoothness: { default: 0.08 }
+        color: { type: 'color', default: '#30a43f' },
+        similarity: { default: 0.4 },
+        smoothness: { default: 0.1 }
       },
       init: function() {
-        const video = this.data.src;
-        const mesh = this.el.getObject3D('mesh');
-        if (!mesh) { this.el.addEventListener('object3dset', () => this.apply()); }
-        else { this.apply(); }
+        this.el.addEventListener('object3dset', () => this.apply());
+        if (this.el.getObject3D('mesh')) this.apply();
       },
       apply: function() {
         const video = this.data.src;
@@ -66,7 +64,7 @@
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
         <a-entity mindar-image-target="targetIndex: 0">
             <a-plane width="2.5" height="1.5" position="0 0 0.1"
-                chromakey-video="src: #vid; color: #175a2b; similarity: 0.45; smoothness: 0.08">
+                chromakey-video="src: #vid; color: #30a43f; similarity: 0.4; smoothness: 0.1">
             </a-plane>
         </a-entity>
     </a-scene>
