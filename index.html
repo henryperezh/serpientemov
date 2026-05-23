@@ -10,7 +10,7 @@
         src: { type: 'selector' },
         color: { type: 'color', default: '#30a43f' },
         similarity: { default: 0.45 },
-        smoothness: { default: 0.1 }
+        smoothness: { default: 0.12 }
       },
       init: function() {
         this.el.addEventListener('object3dset', () => this.apply());
@@ -37,10 +37,24 @@
             uniform float similarity;
             uniform float smoothness;
             varying vec2 vUv;
+
+            vec3 rgb2hsv(vec3 c) {
+              vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0);
+              vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+              vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+              float d = q.x - min(q.w, q.y);
+              float e = 1.0e-10;
+              return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+            }
+
             void main() {
               vec4 c = texture2D(map, vUv);
-              float diff = length(c.rgb - keyColor);
-              float alpha = smoothstep(similarity, similarity + smoothness, diff);
+              vec3 hsv = rgb2hsv(c.rgb);
+              vec3 keyHsv = rgb2hsv(keyColor);
+              float hueDiff = abs(hsv.x - keyHsv.x);
+              if (hueDiff > 0.5) hueDiff = 1.0 - hueDiff;
+              float chromaDist = hueDiff * 2.0 + abs(hsv.y - keyHsv.y) * 0.5;
+              float alpha = smoothstep(similarity - 0.1, similarity + smoothness, chromaDist);
               gl_FragColor = vec4(c.rgb, alpha);
             }
           `,
@@ -64,7 +78,7 @@
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
         <a-entity mindar-image-target="targetIndex: 0">
             <a-plane width="2.5" height="1.5" position="0 0 0.1"
-                chromakey-video="src: #vid; color: #30a43f; similarity: 0.45; smoothness: 0.1">
+                chromakey-video="src: #vid; color: #30a43f; similarity: 0.45; smoothness: 0.12">
             </a-plane>
         </a-entity>
     </a-scene>
