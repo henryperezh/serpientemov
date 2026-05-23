@@ -5,33 +5,53 @@
     <script src="./aframe.min.js"></script>
     <script src="./mindar-image-aframe.prod.js"></script>
     <script>
-    AFRAME.registerShader('chromakey', {
+    AFRAME.registerComponent('chromakey-video', {
       schema: {
-        src: { type: 'map' },
-        color: { default: { x: 0.09, y: 0.35, z: 0.17 } },
+        src: { type: 'selector' },
+        color: { type: 'color', default: '#175a2b' },
         similarity: { default: 0.4 },
         smoothness: { default: 0.08 }
       },
-      vertexShader: `
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform sampler2D src;
-        uniform vec3 color;
-        uniform float similarity;
-        uniform float smoothness;
-        varying vec2 vUv;
-        void main() {
-          vec4 texColor = texture2D(src, vUv);
-          float diff = length(texColor.rgb - color);
-          float alpha = smoothstep(similarity, similarity + smoothness, diff);
-          gl_FragColor = vec4(texColor.rgb, alpha);
-        }
-      `
+      init: function() {
+        const video = this.data.src;
+        const mesh = this.el.getObject3D('mesh');
+        if (!mesh) { this.el.addEventListener('object3dset', () => this.apply()); }
+        else { this.apply(); }
+      },
+      apply: function() {
+        const video = this.data.src;
+        const c = new THREE.Color(this.data.color);
+        const texture = new THREE.VideoTexture(video);
+        const material = new THREE.ShaderMaterial({
+          uniforms: {
+            map: { value: texture },
+            keyColor: { value: new THREE.Vector3(c.r, c.g, c.b) },
+            similarity: { value: this.data.similarity },
+            smoothness: { value: this.data.smoothness }
+          },
+          vertexShader: `
+            varying vec2 vUv;
+            void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }
+          `,
+          fragmentShader: `
+            uniform sampler2D map;
+            uniform vec3 keyColor;
+            uniform float similarity;
+            uniform float smoothness;
+            varying vec2 vUv;
+            void main() {
+              vec4 c = texture2D(map, vUv);
+              float diff = length(c.rgb - keyColor);
+              float alpha = smoothstep(similarity, similarity + smoothness, diff);
+              gl_FragColor = vec4(c.rgb, alpha);
+            }
+          `,
+          transparent: true,
+          side: THREE.DoubleSide
+        });
+        const mesh = this.el.getObject3D('mesh');
+        if (mesh) mesh.material = material;
+      }
     });
     </script>
 </head>
@@ -46,7 +66,7 @@
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
         <a-entity mindar-image-target="targetIndex: 0">
             <a-plane width="2.5" height="1.5" position="0 0 0.1"
-                material="shader: chromakey; src: #vid; transparent: true">
+                chromakey-video="src: #vid; color: #175a2b; similarity: 0.4; smoothness: 0.08">
             </a-plane>
         </a-entity>
     </a-scene>
